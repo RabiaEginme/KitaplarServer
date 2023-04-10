@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="sytle.css">
+</head>
+<body onload = "initFunction()">
+    <div class="container">
+        <div class="header">
+            <h3>KitapMekanı</h3>
+            <h1>Çok Okunanlar</h1>
+        </div>
+    
+        <div class="filter">
+            <input placeholder="Aramak istediğiniz kitabı yazınız" onkeyup="searchCollections(this.value)">
+            <ul class="filter__categories">
+                <li class="active">All</li>
+                <li class="active">Bilim Kurgu</li>
+                <li class="active">Trajedi</li>
+                </ul>
+        </div>
+    </div>
+
+    <div class="collections" id="kitaplar"> 
+      
+    </div>
+
+    <script>
+        function searchCollections(p)
+        {
+            console.log(p);
+            //arama yapıldığında sayfanın ilk yüklendiğinde gelenlerin temizlenmesi için
+            var mainContainer = document.getElementById("kitaplar");
+            mainContainer.innerHTML="";
+
+            fetch('http://localhost:3000/search-by-name?name='+p)
+            .then(function (response) {
+                console.log("response :" + response);
+                return response.json();
+            })
+            .then(function (data) {
+                console.log("data :" + data);
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+        function appendData(data) {
+            var mainContainer = document.getElementById("kitaplar");
+            for (var i = 0; i < data.length; i++) {
+                var collections_item = document.createElement("div");
+                collections_item.className = "collections_item";
+                var collection_container =document.createElement("div");
+                collection_container.className = "collection_container";
+
+                var img = document.createElement("img");
+                img.className = "collection_img";
+                img.height=350;
+                img.src = data[i].img;
+                collection_container.appendChild(img);
+
+                var div = document.createElement("div");
+                var strong = document.createElement("strong");
+                strong.innerHTML=data[i].name;
+                var span = document.createElement("span");
+                if(data[i].stock > 0) 
+                    span.innerHTML="Stokta var" ;
+                else
+                    span.innerHTML="Stokta yok" ;
+                // var tarih = document.createElement("span");
+                // tarih.innerHTML = data[i].tarih;
+                div.appendChild(strong);
+                div.appendChild(document.createElement("br"));
+                div.appendChild(span);
+                div.appendChild(document.createElement("br"));
+                collection_container.appendChild(div);
+
+                var pricediv = document.createElement("div");
+                pricediv.className="collection_price";
+
+                var price = document.createElement("strong");
+                price.innerHTML = data[i].price;
+
+                pricediv.appendChild(price);
+                collection_container.appendChild(pricediv);
+                
+                collections_item.appendChild(collection_container);
+                //collections_item.innerHTML = 'Name: ' + data[i].name + ' ' + data[i].price;
+                mainContainer.appendChild(collections_item);
+            }
+        }
+        }
+
+        function initFunction(){
+        fetch('http://localhost:3000/')
+            .then(function (response) {
+                console.log("response :" + response);
+                return response.json();
+            })
+            .then(function (data) {
+                console.log("data :" + data);
+                appendData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+        function appendData(data) {
+            var mainContainer = document.getElementById("kitaplar");
+            for (var i = 0; i < data.length; i++) {
+                var collections_item = document.createElement("div");
+                collections_item.className = "collections_item";
+                var collection_container =document.createElement("div");
+                collection_container.className = "collection_container";
+
+                var img = document.createElement("img");
+                img.className = "collection_img";
+                img.height=350;
+                img.src = data[i].img;
+                collection_container.appendChild(img);
+
+                var div = document.createElement("div");
+                var strong = document.createElement("strong");
+                strong.innerHTML=data[i].name;
+                var span = document.createElement("span");
+                if(data[i].stock > 0) 
+                    span.innerHTML="Stokta var" ;
+                else
+                    span.innerHTML="Stokta yok" ;
+                // var tarih = document.createElement("span");
+                // tarih.innerHTML = data[i].tarih;
+                div.appendChild(strong);
+                div.appendChild(document.createElement("br"));
+                div.appendChild(span);
+                div.appendChild(document.createElement("br"));
+                collection_container.appendChild(div);
+
+                var pricediv = document.createElement("div");
+                pricediv.className="collection_price";
+
+                var price = document.createElement("strong");
+                price.innerHTML = data[i].price;
+
+                pricediv.appendChild(price);
+                collection_container.appendChild(pricediv);
+                
+                collections_item.appendChild(collection_container);
+                //collections_item.innerHTML = 'Name: ' + data[i].name + ' ' + data[i].price;
+                mainContainer.appendChild(collections_item);
+            }
+        }
+        }
+    </script>
+    
+    
+</body>
+</html>
